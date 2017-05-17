@@ -1,0 +1,15 @@
+version: '2'
+services:
+  php:
+    container_name: test-php
+    image: php:fpm
+    volumes:
+      - ./application:/var/www/html/site
+  nginx:
+    container_name: test-nginx
+    image: nginx:latest
+    volumes:
+      - ./application:/var/www/html/site
+      - ./site.conf:/etc/nginx/conf.d/site.conf:ro
+    ports:
+      - 80:80
