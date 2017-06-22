@@ -1,15 +1,38 @@
 version: '2'
 services:
   php:
-    container_name: test-php
-    image: php:fpm
+    build: ./images/php
+    links:
+      - mysql
+      - postgresql
+    container_name: php-common
     volumes:
-      - ./application:/var/www/html/site
+      - ./www:/var/www
   nginx:
-    container_name: test-nginx
+    container_name: nginx-common
     image: nginx:latest
-    volumes:
-      - ./application:/var/www/html/site
-      - ./site.conf:/etc/nginx/conf.d/site.conf:ro
     ports:
-      - 80:80
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./hosts:/etc/nginx/conf.d:ro
+      - ./www:/var/www
+      - ./logs:/var/log/nginx
+    links:
+      - php
+  mysql:
+    image: mysql:8
+    ports:
+        - "3306:3306"
+    volumes:
+        - ./mysql:/var/lib/mysql
+    environment:
+        MYSQL_ROOT_PASSWORD: qwerty
+  postgresql:
+    image: postgres:9.6.3
+    ports:
+      - "5432:5432"
+    environment:
+      - DB_PASS=qwerty
+    volumes:
+      - ./postgresql:/var/lib/postgresql
