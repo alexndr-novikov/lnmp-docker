@@ -21,18 +21,23 @@ services:
     links:
       - php
   mysql:
-    image: mysql:8
+    image: mysql:5.7
     ports:
-        - "3306:3306"
+        - "3307:3306"
     volumes:
         - ./mysql:/var/lib/mysql
     environment:
-        MYSQL_ROOT_PASSWORD: qwerty
+      MYSQL_ROOT_PASSWORD: qwerty
+      MYSQL_DATABASE: database
+      MYSQL_USER: user
+      MYSQL_PASSWORD: qwerty
   postgresql:
     image: postgres:9.6.3
     ports:
       - "5432:5432"
     environment:
+      - POSTGRES_USER=user
+      - POSTGRES_DB=database
       - DB_PASS=qwerty
     volumes:
       - ./postgresql:/var/lib/postgresql
